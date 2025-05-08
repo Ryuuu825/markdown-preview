@@ -27,8 +27,8 @@
             // Function to handle the conversion and display
             function handleConversion() {
                 // fetch the markdown file from the provided link
-                const markdownFileLink = document.getElementById('markdown-input').value;
-                console.log(markdownFileLink);
+                // if the link is in query string format, decode it
+                var markdownFileLink = document.getElementById('markdown-input').value;
                 fetch(markdownFileLink)
                     .then(response => {
                         if (!response.ok) {
@@ -49,6 +49,12 @@
             }
             // Event listeners for buttons
             document.getElementById('convert-button').addEventListener('click', handleConversion);
+            if (window.location.search) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const markdownFileLink = decodeURIComponent(urlParams.get('md'));
+                document.getElementById('markdown-input').value = markdownFileLink;
+                handleConversion();
+            }
 
         </script>
 
