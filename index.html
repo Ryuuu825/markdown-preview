@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Markdown Previewer</title>
+        <!-- preview your markdown with provided link -->
+    <body>
+        <!-- Include markdown-it from CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+        
+        <h1>Markdown Previewer</h1>
+        <input type="text" id="markdown-input" placeholder="Enter your link to your markdown file" style="width:100%;"/>
+        <button id="convert-button">Convert to HTML</button>
+        <div id="markdown-output"></div>
+
+        <script>
+            // Initialize markdown-it
+            const md = window.markdownit();
+
+            // Function to convert markdown to HTML
+            function convertMarkdownToHTML(markdown) {
+                return md.render(markdown);
+            }
+
+            // Function to handle the conversion and display
+            function handleConversion() {
+                // fetch the markdown file from the provided link
+                const markdownFileLink = document.getElementById('markdown-input').value;
+                console.log(markdownFileLink);
+                fetch(markdownFileLink)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(markdown => {
+                        // Convert markdown to HTML
+                        const html = convertMarkdownToHTML(markdown);
+                        // Display the HTML in the output div
+                        document.getElementById('markdown-output').innerHTML = html;
+                    })
+                    .catch(error => {
+                        document.getElementById('markdown-output').innerHTML = `<p>Error: ${error.message}</p>`;
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            }
+            // Event listeners for buttons
+            document.getElementById('convert-button').addEventListener('click', handleConversion);
+
+        </script>
+
+
+    </body>
+</html>
